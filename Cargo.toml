@@ -1,0 +1,11 @@
+[package]
+name = "harper_zed"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+zed_extension_api = "0.1.0"
+
+[lib]
+crate-type = ["cdylib"]

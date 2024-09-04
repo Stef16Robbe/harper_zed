@@ -1,0 +1,10 @@
+id = "harper_ls"
+name = "harper"
+version = "0.0.1"
+schema_version = 1
+authors = ["Stef Robbe <stef.robbe@protonmail.com>"]
+description = "Harper LS support"
+repository = "https://github.com/stef16robbe/harper_zed"
+
+[language_servers.harper-ls]
+name = "Harper LS"
