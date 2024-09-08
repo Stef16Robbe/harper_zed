@@ -1,4 +1,3 @@
-// https://github.com/WeetHet/typst.zed
 use std::fs;
 use zed_extension_api::{self as zed, Result};
 
@@ -106,7 +105,6 @@ impl HarperExtension {
     }
 }
 
-// the the comment checking for speling errors
 impl zed::Extension for HarperExtension {
     fn new() -> Self {
         Self {
