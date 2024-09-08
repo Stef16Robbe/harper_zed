@@ -8,3 +8,22 @@ repository = "https://github.com/stef16robbe/harper_zed"
 
 [language_servers.harper-ls]
 name = "Harper LS"
+languages = [
+    "Markdown",
+    "Rust",
+    "Typescript",
+    # "typescriptreact", not supported yet in Zed
+    "Javascript",
+    "Python",
+    "Go",
+    "C",
+    "Cpp",
+    "Ruby",
+    "Swift",
+    "CSharp",
+    "TOML",
+    "Lua",
+    # "gitcommit", not supported yet in Zed
+    "Java",
+    "HTML",
+]
