@@ -122,7 +122,7 @@ impl zed::Extension for HarperExtension {
         let harper_binary = self.language_server_binary(language_server_id, worktree)?;
         Ok(zed::Command {
             command: harper_binary.path,
-            args: vec![],
+            args: vec!["--stdio".to_string()],
             env: harper_binary.environment.unwrap_or_default(),
         })
     }
