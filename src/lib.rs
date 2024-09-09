@@ -48,7 +48,7 @@ impl HarperExtension {
 
         let (platform, arch) = zed::current_platform();
         let asset_name = format!(
-            "harper-ls-{arch}-{os}",
+            "harper-ls-{arch}-{os}.{archive_type}",
             arch = match arch {
                 zed::Architecture::Aarch64 => "aarch64",
                 zed::Architecture::X8664 => "x86_64",
@@ -59,6 +59,10 @@ impl HarperExtension {
                 zed::Os::Linux => "unknown-linux-gnu",
                 zed::Os::Windows => "pc-windows",
             },
+            archive_type = match platform {
+                zed::Os::Windows => "zip",
+                _ => "tar.gz",
+            }
         );
 
         let asset = release
@@ -70,7 +74,8 @@ impl HarperExtension {
         let version_dir = format!("harper-ls-{}", release.version);
         fs::create_dir_all(&version_dir).map_err(|e| format!("failed to create directory: {e}"))?;
 
-        let binary_path = format!("{version_dir}/harper-ls");
+        // TODO: fix the weird doubly-nested path
+        let binary_path = format!("{version_dir}/harper-ls/harper-ls");
 
         if !fs::metadata(&binary_path).map_or(false, |stat| stat.is_file()) {
             zed::set_language_server_installation_status(
@@ -92,7 +97,7 @@ impl HarperExtension {
             for entry in entries {
                 let entry = entry.map_err(|e| format!("failed to load directory entry {e}"))?;
                 if entry.file_name().to_str() != Some(&version_dir) {
-                    fs::remove_dir_all(&entry.path()).ok();
+                    fs::remove_dir_all(entry.path()).ok();
                 }
             }
         }
