@@ -4,7 +4,7 @@ Zed extension for the [Harper Grammar Checker](https://github.com/elijah-potter/
 
 ## Project status
 
-Works when harper-lsp is pre-installed. Fixing the installation part.
+Tested on MacOS and Linux
 
 ## Acknowledgements
 
