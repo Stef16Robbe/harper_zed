@@ -65,17 +65,14 @@ impl HarperExtension {
             }
         );
 
-        let asset = release
+        let gh_asset = release
             .assets
             .iter()
             .find(|asset| asset.name == asset_name)
             .ok_or_else(|| format!("no asset found matching {:?}", asset_name))?;
 
         let version_dir = format!("harper-ls-{}", release.version);
-        fs::create_dir_all(&version_dir).map_err(|e| format!("failed to create directory: {e}"))?;
-
-        // TODO: fix the weird doubly-nested path
-        let binary_path = format!("{version_dir}/harper-ls/harper-ls");
+        let binary_path = format!("{version_dir}/harper-ls");
 
         if !fs::metadata(&binary_path).map_or(false, |stat| stat.is_file()) {
             zed::set_language_server_installation_status(
@@ -84,8 +81,8 @@ impl HarperExtension {
             );
 
             zed::download_file(
-                &asset.download_url,
-                &binary_path,
+                &gh_asset.download_url,
+                &version_dir,
                 zed::DownloadedFileType::GzipTar,
             )
             .map_err(|e| format!("failed to download file: {e}"))?;
