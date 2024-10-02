@@ -7,13 +7,13 @@ Zed extension for the
 
 ## Project status
 
-Tested on MacOS and Linux
+Tested on macOS and Linux
 
 ## Install
 
-1. [Open Extension Gallery](https://zed.dev/docs/extensions/installing-extensions)
-2. Search `harper` in the Gallery
-3. Click install!
+1. [Open the Extension Gallery](https://zed.dev/docs/extensions/installing-extensions)
+2. Search for `harper` in the Gallery
+3. Click "Install"!
 
 ![Harper in the Zed Extension Gallery](./images/extension_in_gallery.png)
 
