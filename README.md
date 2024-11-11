@@ -10,7 +10,7 @@ Zed extension for the
 | Platform | x86_64 | ARM64 |
 |---|---|---|
 | Linux | ✅ | ✅ |
-| macOS | ✅ | ✅ |
+| MacOS | ✅ | ✅ |
 | Windows | ✅ | ❌ |
 
 ## Install
