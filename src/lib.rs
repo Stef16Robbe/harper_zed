@@ -57,7 +57,7 @@ impl HarperExtension {
             os = match platform {
                 zed::Os::Mac => "apple-darwin",
                 zed::Os::Linux => "unknown-linux-gnu",
-                zed::Os::Windows => "pc-windows",
+                zed::Os::Windows => "pc-windows-msvc",
             },
             archive_type = match platform {
                 zed::Os::Windows => "zip",
@@ -80,21 +80,26 @@ impl HarperExtension {
                 &zed::LanguageServerInstallationStatus::Downloading,
             );
 
-            zed::download_file(
-                &gh_asset.download_url,
-                &version_dir,
-                zed::DownloadedFileType::GzipTar,
-            )
-            .map_err(|e| format!("failed to download file: {e}"))?;
+            let file_type = match platform {
+                zed::Os::Windows => zed::DownloadedFileType::Zip,
+                _ => zed::DownloadedFileType::GzipTar,
+            };
+
+            zed::download_file(&gh_asset.download_url, &version_dir, file_type)
+                .map_err(|e| format!("failed to download file: {e}"))?;
 
             zed::make_file_executable(&binary_path)?;
 
-            let entries =
-                fs::read_dir(".").map_err(|e| format!("failed to list working directory {e}"))?;
-            for entry in entries {
-                let entry = entry.map_err(|e| format!("failed to load directory entry {e}"))?;
-                if entry.file_name().to_str() != Some(&version_dir) {
-                    fs::remove_dir_all(entry.path()).ok();
+            if let Ok(entries) = fs::read_dir(".") {
+                for entry in entries {
+                    if let Ok(entry) = entry {
+                        let file_name = entry.file_name();
+                        if let Some(name) = file_name.to_str() {
+                            if name != version_dir && name.starts_with("harper-ls-") {
+                                fs::remove_dir_all(entry.path()).ok();
+                            }
+                        }
+                    }
                 }
             }
         }

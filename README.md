@@ -5,9 +5,13 @@ Zed extension for the
 
 ![Harper running inside zed](./images/zed_demo.png)
 
-## Project status
+## Supported platforms
 
-Tested on macOS and Linux
+| Platform | x86_64 | ARM64 |
+|---|---|---|
+| Linux | ✅ | ✅ |
+| macOS | ✅ | ✅ |
+| Windows | ✅ | ❌ |
 
 ## Install
 
@@ -17,7 +21,7 @@ Tested on macOS and Linux
 
 ![Harper in the Zed Extension Gallery](./images/extension_in_gallery.png)
 
-## Acknowledgements
+## Acknowledgments
 
 - [elijah-potter](https://github.com/elijah-potter) for creating Harper
 - [WeetHet](https://github.com/WeetHet) for their
