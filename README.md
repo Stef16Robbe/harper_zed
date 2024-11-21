@@ -28,6 +28,9 @@ Additional info can be found [here](https://github.com/elijah-potter/harper/tree
 ```json
 "lsp": {
   "harper-ls": {
+    "binary": {
+      "path": "/path/to/harper-ls"
+    },
     "settings": {
       "harper-ls": {
         "userDictPath": "~/dict.txt",
