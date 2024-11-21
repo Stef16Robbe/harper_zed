@@ -24,7 +24,7 @@ Zed extension for the
 ## Configuration
 
 The extension is configured via the `lsp` section of your zed settings.
-Addition info can be found [here](https://github.com/elijah-potter/harper/tree/master/harper-ls).
+Additionbe found [here](https://github.com/elijah-potter/harper/tree/master/harper-ls).
 ```json
 "lsp": {
   "harper-ls": {
@@ -51,8 +51,8 @@ Addition info can be found [here](https://github.com/elijah-potter/harper/tree/m
           "avoid_curses": true,
           "terminating_conjunctions": true
         },
-        codeActions = {
-          forceStable = false // Force code actions to appear in "stable" positions
+        "codeActions": {
+          "forceStable": false // Force code actions to appear in "stable" positions
         }
       }
     }
