@@ -1,6 +1,6 @@
 use std::fs;
 use std::path::PathBuf;
-use zed_extension_api::{self as zed, Result};
+use zed_extension_api::{self as zed, settings::LspSettings, Result};
 
 struct HarperExtension {
     binary_cache: Option<PathBuf>,
@@ -139,6 +139,18 @@ impl zed::Extension for HarperExtension {
         Self::new()
     }
 
+    fn language_server_initialization_options(
+        &mut self,
+        server_id: &zed_extension_api::LanguageServerId,
+        worktree: &zed_extension_api::Worktree,
+    ) -> Result<Option<zed_extension_api::serde_json::Value>> {
+        let settings = LspSettings::for_worktree(server_id.as_ref(), worktree)
+            .ok()
+            .and_then(|lsp_settings| lsp_settings.initialization_options.clone())
+            .unwrap_or_default();
+        Ok(Some(settings))
+    }
+
     fn language_server_command(
         &mut self,
         language_server_id: &zed::LanguageServerId,
@@ -154,6 +166,18 @@ impl zed::Extension for HarperExtension {
             args: vec!["--stdio".to_string()],
             env: binary.env.unwrap_or_default(),
         })
+    }
+
+    fn language_server_workspace_configuration(
+        &mut self,
+        server_id: &zed_extension_api::LanguageServerId,
+        worktree: &zed_extension_api::Worktree,
+    ) -> Result<Option<zed_extension_api::serde_json::Value>> {
+        let settings = LspSettings::for_worktree(server_id.as_ref(), worktree)
+            .ok()
+            .and_then(|lsp_settings| lsp_settings.settings.clone())
+            .unwrap_or_default();
+        Ok(Some(settings))
     }
 }
 
