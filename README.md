@@ -7,7 +7,7 @@ Zed extension for the
 
 ## Supported platforms
 
-| Platform | x86_64 | ARM64 |
+| Platform | X86_64 | ARM64 |
 |---|---|---|
 | Linux | ✅ | ✅ |
 | MacOS | ✅ | ✅ |

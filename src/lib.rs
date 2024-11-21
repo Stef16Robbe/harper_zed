@@ -63,26 +63,24 @@ impl HarperExtension {
         let arch_name = match arch {
             zed::Architecture::Aarch64 => "aarch64",
             zed::Architecture::X8664 => "x86_64",
-            zed::Architecture::X86 => {
-                return Err("x86 architecture is not supported for Harper language server".into())
-            }
+            zed::Architecture::X86 => return Err("x86 architecture is not supported".into()),
         };
 
-        let (os_str, ext) = match platform {
+        let (os_str, file_ext) = match platform {
             zed::Os::Mac => ("apple-darwin", "tar.gz"),
             zed::Os::Linux => ("unknown-linux-gnu", "tar.gz"),
             zed::Os::Windows => ("pc-windows-msvc", "zip"),
         };
 
-        let asset_name = format!("harper-ls-{arch_name}-{os_str}.{ext}");
+        let asset_name = format!("harper-ls-{arch_name}-{os_str}.{file_ext}");
         let asset = release
             .assets
             .iter()
             .find(|a| a.name == asset_name)
             .ok_or_else(|| format!("No compatible Harper binary found for {arch_name}-{os_str}"))?;
 
-        let version_dir = PathBuf::from(format!("harper-ls-{}", release.version));
-        let mut binary_path = version_dir.join("harper-ls");
+        let version_dir = format!("harper-ls-{}", release.version);
+        let mut binary_path = PathBuf::from(&version_dir).join("harper-ls");
 
         if platform == zed::Os::Windows {
             binary_path.set_extension("exe");
@@ -94,30 +92,35 @@ impl HarperExtension {
                 &zed::LanguageServerInstallationStatus::Downloading,
             );
 
-            zed::download_file(
-                &asset.download_url,
-                version_dir
-                    .to_str()
-                    .ok_or("Invalid version directory path")?,
-                if cfg!(windows) {
-                    zed::DownloadedFileType::Zip
-                } else {
-                    zed::DownloadedFileType::GzipTar
-                },
-            )
-            .map_err(|e| format!("Failed to download Harper binary: {}", e))?;
+            let download_result = (|| -> Result<()> {
+                zed::download_file(
+                    &asset.download_url,
+                    &version_dir,
+                    if platform == zed::Os::Windows {
+                        zed::DownloadedFileType::Zip
+                    } else {
+                        zed::DownloadedFileType::GzipTar
+                    },
+                )
+                .map_err(|e| format!("Failed to download Harper binary: {}", e))?;
 
-            zed::make_file_executable(
-                binary_path
-                    .to_str()
-                    .ok_or("Failed to convert binary path to string")?,
-            )
-            .map_err(|e| format!("Failed to make binary executable: {}", e))?;
+                zed::make_file_executable(binary_path.to_str().ok_or("Invalid binary path")?)
+                    .map_err(|e| format!("Failed to make binary executable: {}", e))?;
+
+                Ok(())
+            })();
+
+            if let Err(e) = download_result {
+                fs::remove_dir_all(&version_dir).ok();
+                return Err(e);
+            }
 
             if let Ok(entries) = fs::read_dir(".") {
                 for entry in entries.flatten() {
-                    if entry.path() != version_dir {
-                        fs::remove_dir_all(entry.path()).ok();
+                    if let Ok(name) = entry.file_name().into_string() {
+                        if name != version_dir {
+                            fs::remove_dir_all(entry.path()).ok();
+                        }
                     }
                 }
             }
