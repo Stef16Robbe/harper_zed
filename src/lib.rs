@@ -173,10 +173,25 @@ impl zed::Extension for HarperExtension {
         server_id: &zed_extension_api::LanguageServerId,
         worktree: &zed_extension_api::Worktree,
     ) -> Result<Option<zed_extension_api::serde_json::Value>> {
-        let settings = LspSettings::for_worktree(server_id.as_ref(), worktree)
-            .ok()
-            .and_then(|lsp_settings| lsp_settings.settings.clone())
-            .unwrap_or_default();
+        let default_settings = zed_extension_api::serde_json::json!({
+            "harper-ls": {
+                "settings": {
+                    "harper-ls": {
+                        "diagnosticSeverity": "information"
+                    }
+                }
+            }
+        });
+
+        let settings = LspSettings::for_worktree(server_id.as_ref(), worktree).map_or_else(
+            |_| default_settings.clone(),
+            |lsp_settings| {
+                lsp_settings
+                    .settings
+                    .unwrap_or_else(|| default_settings.clone())
+            },
+        );
+
         Ok(Some(settings))
     }
 }
