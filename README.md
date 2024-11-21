@@ -24,7 +24,7 @@ Zed extension for the
 ## Configuration
 
 The extension is configured via the `lsp` section of your zed settings.
-Additionbe found [here](https://github.com/elijah-potter/harper/tree/master/harper-ls).
+Additional info can be found [here](https://github.com/elijah-potter/harper/tree/master/harper-ls).
 ```json
 "lsp": {
   "harper-ls": {
