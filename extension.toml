@@ -8,6 +8,8 @@ repository = "https://github.com/stef16robbe/harper_zed"
 
 [language_servers.harper-ls]
 name = "Harper LS"
+# Not all of these are supported by Harper yet, see: https://github.com/Stef16Robbe/harper_zed/pull/4#issuecomment-2469318095
+# See nvim config for supported langs: https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/configs/harper_ls.lua
 languages = [
     # General Purpose
     "Python",
