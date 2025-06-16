@@ -1,6 +1,6 @@
 use std::fs;
 use std::path::PathBuf;
-use zed_extension_api::{self as zed, Result};
+use zed_extension_api::{self as zed, settings::LspSettings, Result};
 
 struct HarperExtension {
     binary_cache: Option<PathBuf>,
@@ -12,6 +12,8 @@ struct HarperBinary {
     env: Option<Vec<(String, String)>>,
 }
 
+static NAME: &str = "harper-ls";
+
 impl HarperExtension {
     fn new() -> Self {
         Self { binary_cache: None }
@@ -22,7 +24,7 @@ impl HarperExtension {
         language_server_id: &zed::LanguageServerId,
         worktree: &zed::Worktree,
     ) -> Result<HarperBinary> {
-        if let Some(path) = worktree.which("harper-ls") {
+        if let Some(path) = worktree.which(NAME) {
             return Ok(HarperBinary {
                 path: PathBuf::from(path),
                 env: Some(worktree.shell_env()),
@@ -57,7 +59,7 @@ impl HarperExtension {
                 pre_release: false,
             },
         )
-        .map_err(|e| format!("Failed to fetch latest release: {}", e))?;
+        .map_err(|e| format!("Failed to fetch latest release: {e}"))?;
 
         let (platform, arch) = zed::current_platform();
         let arch_name = match arch {
@@ -72,15 +74,15 @@ impl HarperExtension {
             zed::Os::Windows => ("pc-windows-msvc", "zip"),
         };
 
-        let asset_name = format!("harper-ls-{arch_name}-{os_str}.{file_ext}");
+        let asset_name = format!("{NAME}-{arch_name}-{os_str}.{file_ext}");
         let asset = release
             .assets
             .iter()
             .find(|a| a.name == asset_name)
             .ok_or_else(|| format!("No compatible Harper binary found for {arch_name}-{os_str}"))?;
 
-        let version_dir = format!("harper-ls-{}", release.version);
-        let mut binary_path = PathBuf::from(&version_dir).join("harper-ls");
+        let version_dir = format!("{NAME}-{}", release.version);
+        let mut binary_path = PathBuf::from(&version_dir).join(NAME);
 
         if platform == zed::Os::Windows {
             binary_path.set_extension("exe");
@@ -102,10 +104,10 @@ impl HarperExtension {
                         zed::DownloadedFileType::GzipTar
                     },
                 )
-                .map_err(|e| format!("Failed to download Harper binary: {}", e))?;
+                .map_err(|e| format!("Failed to download Harper binary: {e}"))?;
 
                 zed::make_file_executable(binary_path.to_str().ok_or("Invalid binary path")?)
-                    .map_err(|e| format!("Failed to make binary executable: {}", e))?;
+                    .map_err(|e| format!("Failed to make binary executable: {e}"))?;
 
                 Ok(())
             })();
@@ -154,6 +156,18 @@ impl zed::Extension for HarperExtension {
             args: vec!["--stdio".to_string()],
             env: binary.env.unwrap_or_default(),
         })
+    }
+
+    fn language_server_workspace_configuration(
+        &mut self,
+        server_id: &zed_extension_api::LanguageServerId,
+        worktree: &zed_extension_api::Worktree,
+    ) -> Result<Option<zed_extension_api::serde_json::Value>> {
+        let settings = LspSettings::for_worktree(server_id.as_ref(), worktree)
+            .ok()
+            .and_then(|lsp_settings| lsp_settings.settings.clone());
+
+        Ok(settings)
     }
 }
 
