@@ -90,6 +90,7 @@ languages = [
     "GLSL",
     "Prisma",
     "Proto",
+    "Solidity",
 
     # Not supported yet
     # "typescriptreact",
