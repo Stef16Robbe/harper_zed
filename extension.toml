@@ -1,6 +1,6 @@
 id = "harper"
 name = "harper"
-version = "0.0.5"
+version = "0.0.6"
 schema_version = 1
 authors = ["Stef Robbe <stef.robbe@protonmail.com>"]
 description = "Harper LS support"
@@ -83,13 +83,14 @@ languages = [
   "Terraform",
   "Yarn",
 
-  # Other
-  "Biome",
-  "Clojure",
-  "Emmet",
-  "GLSL",
-  "Prisma",
-  "Proto",
+    # Other
+    "Biome",
+    "Clojure",
+    "Emmet",
+    "GLSL",
+    "Prisma",
+    "Proto",
+    "Solidity",
 
   # Not supported yet
   # "typescriptreact",
