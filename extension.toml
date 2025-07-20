@@ -4,7 +4,7 @@ version = "0.0.6"
 schema_version = 1
 authors = ["Stef Robbe <stef.robbe@protonmail.com>"]
 description = "Harper LS support"
-repository = "https://github.com/stef16robbe/harper_zed"
+repository = "https://github.com/zed-extensions/harper"
 
 [language_servers.harper-ls]
 name = "Harper LS"
@@ -83,14 +83,14 @@ languages = [
   "Terraform",
   "Yarn",
 
-    # Other
-    "Biome",
-    "Clojure",
-    "Emmet",
-    "GLSL",
-    "Prisma",
-    "Proto",
-    "Solidity",
+  # Other
+  "Biome",
+  "Clojure",
+  "Emmet",
+  "GLSL",
+  "Prisma",
+  "Proto",
+  "Solidity",
 
   # Not supported yet
   # "typescriptreact",

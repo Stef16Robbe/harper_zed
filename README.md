@@ -1,4 +1,4 @@
-# harper_zed
+# Harper Zed Extension
 
 Zed extension for the
 [Harper Grammar Checker](https://github.com/elijah-potter/harper) LS.
